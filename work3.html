@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeamSync Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navh: 88px;
+  --navy: #0e1c36;
+  --navy2: #162444;
+  --blue: #1a56db;
+  --blue2: #1649c0;
+  --gold: #f59e0b;
+  --gold2: #d97706;
+  --red: #dc2626;
+  --green: #16a34a;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --bg: #f1f5f9;
+  --white: #ffffff;
+  --shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ===========================
+   TOP BAR
+   =========================== */
+.topbar { background: var(--navy); color: #aab8cc; font-size: 12px; padding: 5px 24px; display: flex; justify-content: space-between; align-items: center; }
+.topbar span { display: flex; align-items: center; gap: 6px; }
+.top-links { display: flex; align-items: center; gap: 14px; }
+.top-link {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+.top-link:hover { color: #fff; }
+
+/* ===========================
+   MAIN NAVBAR
+   =========================== */
+.navbar {
+  background: var(--navy);
+  position: sticky; top: 0; z-index: 999;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.nav-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 24px;
+  display: flex; align-items: center;
+  height: var(--navh); gap: 0;
+}
+.nav-logo {
+  font-family: 'Nunito', sans-serif;
+  font-size: 20px; font-weight: 800;
+  color: #fff; margin-right: 24px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.nav-logo span { color: var(--gold); }
+
+/* Nav items */
+.nav-menu { display: flex; height: var(--navh); flex: 1; min-width: 0; }
+.nav-item { position: relative; height: var(--navh); display: flex; align-items: center; }
+.nav-link {
+  padding: 0 15px; height: var(--navh);
+  display: flex; align-items: center; gap: 5px;
+  color: #cbd5e1; font-size: 13.5px; font-weight: 600;
+  border: none; background: transparent; cursor: pointer;
+  white-space: nowrap; border-bottom: 3px solid transparent;
+  transition: all 0.15s; font-family: 'Lato', sans-serif;
+  text-decoration: none;
+}
+.nav-link:hover, .nav-item:hover > .nav-link { color: #fff; background: rgba(255,255,255,0.07); }
+.nav-link.active { color: #fff; border-bottom: 3px solid var(--gold); }
+.nav-link .arrow { font-size: 9px; margin-top: 1px; transition: transform 0.2s; }
+.nav-item:hover > .nav-link .arrow { transform: rotate(180deg); }
+
+/* Dropdown */
+.dropdown {
+  display: none; position: absolute; top: var(--navh); left: 0;
+  background: #fff; border: 1px solid var(--border);
+  border-top: 3px solid var(--blue);
+  border-radius: 0 0 8px 8px;
+  min-width: 210px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+.nav-item:hover .dropdown { display: block; }
+.dropdown a, .dropdown button {
+  display: block; width: 100%;
+  padding: 11px 18px; font-size: 13.5px; color: var(--text);
+  border: none; background: transparent; cursor: pointer;
+  text-align: left; font-family: 'Lato', sans-serif;
+  text-decoration: none; border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s;
+}
+.dropdown a:last-child, .dropdown button:last-child { border-bottom: none; }
+.dropdown a:hover, .dropdown button:hover { background: #f0f7ff; color: var(--blue); }
+.dropdown a.active-dd { background: #eff6ff; color: var(--blue); font-weight: 700; }
+
+/* Nav right */
+.nav-spacer { flex: 0 0 0; width: 0; }
+.nav-tools { display: flex; flex-direction: column; gap: 10px; margin-right: 16px; flex-shrink: 0; width: 230px; min-width: 230px; }
+.search-row { display: flex; align-items: center; gap: 8px; }
+.role-search {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  font-family: 'Lato', sans-serif;
+  min-width: 165px;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.12);
+  transition: all 0.18s ease;
+}
+.role-search:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+.search-btn {
+  border: none;
+  border-radius: 6px;
+  background: var(--blue);
+  color: #fff;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.search-btn:hover { background: var(--blue2); }
+.admin-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #0f172a;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(217,119,6,0.35);
+  transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+}
+.admin-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 10px 18px rgba(217,119,6,0.4);
+}
+.admin-btn:active { transform: translateY(0); }
+.nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.nav-user-chip {
+  display: flex; align-items: center; gap: 9px;
+  background: rgba(255,255,255,0.1); border-radius: 30px;
+  padding: 5px 14px 5px 6px; cursor: pointer;
+  position: relative;
+}
+.nav-user-chip:hover { background: rgba(255,255,255,0.18); }
+.chip-av {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; font-family: 'Nunito', sans-serif;
+  color: var(--navy);
+}
+.chip-name { color: #fff; font-size: 13px; font-weight: 600; }
+.chip-role { color: #94a3b8; font-size: 11px; }
+.chip-dropdown {
+  display: none; position: absolute; top: 46px; right: 0;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 8px; min-width: 190px;
+  box-shadow: var(--shadow); z-index: 1001;
+  overflow: hidden;
+}
+.nav-user-chip:hover .chip-dropdown { display: block; }
+.chip-dropdown a, .chip-dropdown button {
+  display: block; width: 100%; padding: 10px 16px;
+  font-size: 13px; color: var(--text); border: none;
+  background: transparent; cursor: pointer; text-align: left;
+  font-family: 'Lato', sans-serif; text-decoration: none;
+  border-bottom: 1px solid #f1f5f9; transition: background 0.15s;
+}
+.chip-dropdown a:last-child, .chip-dropdown button:last-child { border-bottom: none; }
+.chip-dropdown a:hover, .chip-dropdown button:hover { background: #f8fafc; }
+.chip-dropdown .cd-head { padding: 12px 16px 8px; border-bottom: 1px solid var(--border); }
+.chip-dropdown .cd-head strong { display: block; font-size: 14px; }
+.chip-dropdown .cd-head span { font-size: 12px; color: var(--muted); }
+
+.nbtn { padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 700; font-family: 'Lato', sans-serif; transition: all 0.15s; }
+.n-gold { background: var(--gold); color: var(--navy); }
+.n-gold:hover { background: var(--gold2); }
+.n-outline { background: transparent; color: #cbd5e1; border: 1px solid #475569; }
+.n-outline:hover { color: #fff; border-color: #94a3b8; }
+
+/* ===========================
+   LAYOUT
+   =========================== */
+.page-wrap { max-width: 1280px; margin: 0 auto; padding: 24px; display: flex; gap: 22px; }
+.sidebar { width: 220px; flex-shrink: 0; }
+.main-content { flex: 1; min-width: 0; }
+.right-panel { width: 260px; flex-shrink: 0; }
+
+/* SIDEBAR */
+.sidebar-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+.sidebar-card-head { background: var(--navy); color: #fff; padding: 10px 15px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+.sidebar-links a, .sidebar-links button {
+  display: block; width: 100%; padding: 9px 16px;
+  font-size: 13.5px; color: var(--text); text-decoration: none;
+  border: none; background: transparent; cursor: pointer;
+  text-align: left; font-family: 'Lato', sans-serif;
+  border-bottom: 1px solid #f8fafc;
+  transition: all 0.12s;
+}
+.sidebar-links a:hover, .sidebar-links button:hover { background: #f0f7ff; color: var(--blue); padding-left: 22px; }
+.sidebar-links a.active, .sidebar-links button.active { background: #eff6ff; color: var(--blue); font-weight: 700; border-left: 3px solid var(--blue); }
+
+.batch-info { padding: 14px 15px; }
+.batch-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 13px; }
+.batch-row .label { color: var(--muted); }
+.batch-row .val   { font-weight: 700; }
+.batch-row .val.red { color: var(--red); }
+.view-btn { display: block; width: 100%; margin-top: 12px; padding: 9px; background: var(--blue); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; text-align: center; font-family: 'Lato', sans-serif; }
+.view-btn:hover { background: var(--blue2); }
+
+/* RIGHT PANEL */
+.enquiry-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+.eq-head { background: var(--navy); color: #fff; padding: 10px 15px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+.eq-body { padding: 14px 15px; }
+.eq-body p { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+.eq-input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px; font-size: 13px; font-family: 'Lato', sans-serif; margin-bottom: 9px; }
+.eq-input:focus { outline: none; border-color: var(--blue); }
+.eq-btn { width: 100%; padding: 10px; background: var(--blue); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13.5px; font-weight: 700; font-family: 'Lato', sans-serif; }
+.eq-btn:hover { background: var(--blue2); }
+.notices { padding: 12px 15px; }
+.notice-item { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: 12.5px; align-items: flex-start; }
+.notice-item:last-child { border-bottom: none; }
+.notice-badge { padding: 2px 7px; border-radius: 3px; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+.nb-new  { background: #fef3c7; color: #d97706; }
+.nb-info { background: #dbeafe; color: #1d4ed8; }
+
+/* ===========================
+   CONTENT SECTIONS
+   =========================== */
+.hero-banner { background: linear-gradient(135deg, var(--navy), var(--navy2)); color: #fff; border-radius: 10px; padding: 28px 32px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.hero-banner::after { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; background: rgba(245,158,11,0.08); border-radius: 50%; }
+.hero-banner h1 { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+.hero-banner p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+.hero-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+.hstat { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 14px 20px; text-align: center; min-width: 110px; }
+.hstat .hval { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 800; color: var(--gold); }
+.hstat .hlbl { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+.sec { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; margin-bottom: 20px; }
+.sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+.sec-title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; }
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th { background: var(--navy); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; }
+td { padding: 11px 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f8fafc; }
+.action-btns { display: flex; gap: 7px; }
+
+/* TAGS */
+.tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-right: 3px; }
+.t-dir  { background: #fff3e0; color: #d97706; }
+.t-pm   { background: #dbeafe; color: #1d4ed8; }
+.t-tl   { background: #f3e8ff; color: #7c3aed; }
+.t-mem  { background: #dcfce7; color: #15803d; }
+
+/* BUTTONS */
+.btn { padding: 6px 14px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 700; font-family: 'Lato', sans-serif; }
+.b-blue  { background: var(--blue); color: #fff; } .b-blue:hover  { background: var(--blue2); }
+.b-red   { background: var(--red);  color: #fff; } .b-red:hover   { opacity: 0.85; }
+.b-green { background: var(--green);color: #fff; } .b-green:hover { opacity: 0.85; }
+.b-gray  { background: #64748b; color: #fff; }    .b-gray:hover  { background: #475569; }
+
+/* TEAM CARDS */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 14px; }
+.team-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 18px 14px; text-align: center; transition: box-shadow 0.2s; }
+.team-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.tc-av { width: 50px; height: 50px; border-radius: 50%; font-size: 18px; font-weight: 800; font-family: 'Nunito', sans-serif; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.tc-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+.tc-group { font-size: 12px; color: var(--muted); margin-bottom: 7px; }
+
+/* ---- INLINE PANEL (login / signup) ---- */
+.panel-overlay {
+  display: none;
+  position: relative;
+  z-index: auto;
+  background: transparent;
+}
+.panel-overlay.open { display: block; animation: none; }
+@keyframes fadeInBg { from { opacity:0 } to { opacity:1 } }
+.panel-overlay.inline-auth { display: block; }
+
+.panel-box {
+  background: #fff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: none;
+  box-shadow: none;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  animation: none;
+  position: relative;
+}
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(40px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0)    scale(1);    }
+}
+
+/* Coloured top strip */
+.panel-strip {
+  background: linear-gradient(135deg, var(--navy), #1a3a6e);
+  padding: 26px 28px 22px;
+  color: #fff; position: relative;
+}
+.panel-strip h2 { font-family:'Nunito',sans-serif; font-size:22px; font-weight:800; margin-bottom:4px; }
+.panel-strip p  { font-size:13px; color:#94a3b8; }
+.panel-close {
+  position: absolute; top: 16px; right: 18px;
+  background: rgba(255,255,255,0.12); border: none;
+  color: #fff; width: 30px; height: 30px; border-radius: 50%;
+  font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.panel-close:hover { background: rgba(255,255,255,0.25); }
+.panel-overlay.inline-auth .panel-close { display: none; }
+
+/* Tabs inside panel (Login / Sign Up toggle) */
+.panel-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.ptab {
+  flex: 1; padding: 13px; border: none; background: transparent;
+  font-family:'Lato',sans-serif; font-size:14px; font-weight:700;
+  color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent;
+  margin-bottom: -1px; transition: all 0.15s;
+}
+.ptab.active { color: var(--blue); border-bottom: 3px solid var(--blue); }
+
+.panel-body { padding: 24px 28px 28px; }
+.panel-form { display: none; }
+.panel-form.active { display: block; }
+
+/* FORM FIELDS */
+.fr { margin-bottom: 16px; }
+.fr label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.fr input, .fr select {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 14px; font-family:'Lato',sans-serif;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.fr input:focus, .fr select:focus {
+  outline: none; border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+}
+.fr-row { display: flex; gap: 12px; }
+.fr-row .fr { flex: 1; }
+.ma { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
+.err { color: var(--red); font-size: 12px; margin-top: 6px; display: none; }
+
+/* ---- UTILITY MODALS (edit/delete — keep as plain overlays) ---- */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal { background: #fff; border-radius: 12px; padding: 28px; width: 420px; max-width: 96vw; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.modal-title { font-family:'Nunito',sans-serif; font-size:18px; font-weight:800; }
+.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--muted); line-height: 1; }
+.admin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 10px;
+}
+.admin-row:last-child { border-bottom: none; }
+.admin-meta { font-size: 12px; color: var(--muted); }
+.admin-reqs { max-height: 280px; overflow: auto; margin-top: 8px; }
+.login-note {
+  margin-bottom: 12px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  display: none;
+}
+
+/* PAGE SHOW */
+.page { display: none; }
+.page.on { display: block; }
+
+/* PUBLIC HERO */
+.pub-hero { background: linear-gradient(135deg, var(--navy) 60%, #1a3a6e); color: #fff; padding: 60px 24px; text-align: center; }
+.pub-hero h1 { font-family: 'Nunito', sans-serif; font-size: 36px; font-weight: 800; margin-bottom: 10px; }
+.pub-hero p { color: #94a3b8; font-size: 16px; margin-bottom: 28px; }
+.pub-hero-btns { display: flex; gap: 14px; justify-content: center; }
+.phbtn { padding: 12px 32px; border-radius: 7px; border: none; cursor: pointer; font-size: 14px; font-weight: 700; font-family: 'Lato', sans-serif; }
+.ph-gold { background: var(--gold); color: var(--navy); }
+.ph-gold:hover { background: var(--gold2); }
+.ph-out  { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.4); }
+.ph-out:hover { border-color: #fff; }
+
+/* ROLE PICKER */
+.rp-page { min-height: calc(100vh - 100px); display: flex; align-items: center; justify-content: center; }
+.rp-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 36px; max-width: 560px; width: 100%; text-align: center; box-shadow: var(--shadow); }
+.rp-card h2 { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.rp-card .sub { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+.rp-card .info { font-size: 14px; color: var(--text); margin-bottom: 20px; }
+.rp-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.rbtn { padding: 14px 28px; border: 2px solid var(--blue); background: #fff; color: var(--blue); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; min-width: 160px; font-family: 'Lato', sans-serif; transition: all 0.15s; }
+.rbtn:hover { background: var(--blue); color: #fff; }
+
+@media (max-width: 900px) { .sidebar, .right-panel { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar" id="topbar">
+  <span>TeamSync Employee Portal</span>
+  <div class="top-links">
+    <a href="#" class="top-link" onclick="showPublicSection('home');return false">Home</a>
+    <a href="#" class="top-link" onclick="showPublicSection('about');return false">About CDAC</a>
+    <a href="#" class="top-link" onclick="showPublicSection('employee-roles');return false">About Employee Roles</a>
+  </div>
+  <span id="topbar-right">Welcome, Guest</span>
+</div>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">Team<span>Sync</span></div>
+
+    <!-- Dynamic menu injected by JS -->
+    <div class="nav-menu" id="nav-menu"></div>
+
+    <div class="nav-spacer"></div>
+
+    <div class="nav-tools" id="nav-tools">
+      <div class="search-row">
+        <select class="role-search" id="nav-role-search">
+          <option>Director</option>
+          <option>Project Manager</option>
+          <option>Team Leader</option>
+          <option>Team Member</option>
+          <option>User</option>
+        </select>
+        <button class="search-btn" onclick="runRoleSearch()">Search</button>
+      </div>
+      <button class="admin-btn" onclick="openAdminPanel()">Admin Login</button>
+    </div>
+
+    <!-- User chip or login button -->
+    <div class="nav-right" id="nav-right">
+      <button class="nbtn n-outline" onclick="openPanel('login')">Login</button>
+      <button class="nbtn n-gold"    onclick="openPanel('signup')">Sign Up</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== PUBLIC PAGE ===================== -->
+<div class="page on" id="pg-public">
+  
+  <div class="page-wrap">
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">🔗 Quick Links</div>
+        <div class="sidebar-links">
+          <a href="#" onclick="openPanel('login');return false">Login</a>
+          <a href="#" onclick="openPanel('signup');return false">Sign Up</a>
+          <a href="#">View Team</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="hero-banner">
+        <h1>Employee Management Portal</h1>
+        <p>A unified platform for managing employees, roles, teams and groups.</p>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hval" id="stat-total">—</div><div class="hlbl">Employees</div></div>
+          <div class="hstat"><div class="hval">4</div><div class="hlbl">Groups</div></div>
+          <div class="hstat"><div class="hval">4</div><div class="hlbl">Roles</div></div>
+        </div>
+      </div>
+      <div class="sec" id="about-cdac">
+        <div class="sec-head"><div class="sec-title">About CDAC</div></div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7">
+          A leading global company in the technology, e-commerce, and cloud computing industry was founded in 1994 and is headquartered in the United States, employing around 1.5 million people worldwide under the leadership of a well-known CEO. The company generates over $550 billion in annual revenue with a net income of approximately $30 billion and a market capitalization exceeding $1.5 trillion. Its core business segments include an extensive online marketplace offering products across multiple categories with significant contributions from third-party sellers, a highly dominant cloud computing division providing infrastructure and AI services, subscription-based services such as video streaming and premium delivery, and a robust logistics network ensuring efficient global distribution. The company is recognized for its strong customer-centric approach, continuous investment in artificial intelligence and automation, and rapid expansion, particularly during pandemic years, while also facing challenges such as regulatory scrutiny, high operational costs, and intense competition from other global players.
+
+        </p>
+      </div>
+      <div class="sec" id="about-employee-roles">
+        <div class="sec-head"><div class="sec-title">About Employee Roles</div></div>
+        <table>
+          <thead><tr><th>Role</th><th>Responsibilities</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag t-dir">Director</span></td><td>Provides strategic direction, reviews overall performance, and approves key decisions.</td></tr>
+            <tr><td><span class="tag t-pm">Project Manager</span></td><td>Plans projects, manages resources, coordinates teams, and resolves blockers.</td></tr>
+            <tr><td><span class="tag t-tl">Team Leader</span></td><td>Guides the team, allocates work, and tracks execution quality and timelines.</td></tr>
+            <tr><td><span class="tag t-mem">Team Member</span></td><td>Works on assigned tasks, updates progress, and supports delivery milestones.</td></tr>
+            <tr><td><span class="tag t-mem">User</span></td><td>Can view public information such as Home, About CDAC, and About Employee Roles only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="enquiry-card">
+        <div class="eq-head">📋 Quick Enquiry</div>
+        <div class="eq-body">
+          <p>Get more info about joining our team.</p>
+          <input class="eq-input" placeholder="Full Name *" />
+          <input class="eq-input" placeholder="Phone *" />
+          <input class="eq-input" placeholder="Email *" />
+          <select class="eq-input"><option>-- Select Role --</option><option>Director</option><option>Project Manager</option><option>Team Leader</option><option>Team Member</option><option>User</option></select>
+          <button class="eq-btn">Send Enquiry →</button>
+        </div>
+      </div>
+      <div class="enquiry-card">
+        <div class="eq-head">🔔 Notices</div>
+        <div class="notices">
+          <div class="notice-item"><span class="notice-badge nb-new">NEW</span><span>Team1 has 2 open slots</span></div>
+          <div class="notice-item"><span class="notice-badge nb-info">INFO</span><span>Q3 performance reviews in Aug</span></div>
+          <div class="notice-item"><span class="notice-badge nb-new">NEW</span><span>Leadership training — Sep batch</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AUTH PAGE ===================== -->
+<div class="page" id="pg-auth">
+  <div class="page-wrap">
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">Quick Links</div>
+        <div class="sidebar-links">
+          <a href="#" onclick="showPublicSection('home');return false">Home</a>
+          <a href="#" onclick="showPublicSection('about');return false">About CDAC</a>
+          <a href="#" onclick="openPanel('login');return false">Login</a>
+          <a href="#" onclick="openPanel('signup');return false">Sign Up</a>
+        </div>
+      </div>
+    </div>
+    <div class="main-content" id="auth-host"></div>
+    <div class="right-panel">
+      <div class="enquiry-card">
+        <div class="eq-head">Notices</div>
+        <div class="notices">
+          <div class="notice-item"><span class="notice-badge nb-new">NEW</span><span>Team1 has 2 open slots</span></div>
+          <div class="notice-item"><span class="notice-badge nb-info">INFO</span><span>Q3 performance reviews in Aug</span></div>
+          <div class="notice-item"><span class="notice-badge nb-new">NEW</span><span>Leadership training - Sep batch</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN AUTH PAGE ===================== -->
+<div class="page" id="pg-admin-auth">
+  <div class="page-wrap">
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">Quick Links</div>
+        <div class="sidebar-links">
+          <a href="#" onclick="showPublicSection('home');return false">Home</a>
+          <a href="#" onclick="openPanel('login');return false">User Login</a>
+          <a href="#" onclick="openPanel('signup');return false">User Sign Up</a>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="panel-box" style="border:1px solid var(--border)">
+        <div class="panel-strip">
+          <h2>Admin Login</h2>
+          <p>Sign in to review approvals and team data</p>
+        </div>
+        <div class="panel-body" style="padding-top:22px">
+          <div class="fr"><label>Admin Username</label><input type="text" id="ai-name" placeholder="admin" /></div>
+          <div class="fr"><label>Admin Password</label><input type="password" id="ai-pass" placeholder="Enter admin password" /></div>
+          <div class="err" id="ai-err">Invalid admin credentials.</div>
+          <div class="ma">
+            <button class="btn b-gray" onclick="showPublicSection('home')">Cancel</button>
+            <button class="btn b-blue" onclick="adminLogin()">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="enquiry-card">
+        <div class="eq-head">Admin Access</div>
+        <div class="notices">
+          <div class="notice-item"><span class="notice-badge nb-info">INFO</span><span>Use Admin credentials to continue.</span></div>
+          <div class="notice-item"><span class="notice-badge nb-new">TIP</span><span>After login, approvals and team edit options are available.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ROLE PICKER PAGE ===================== -->
+<div class="page" id="pg-roles">
+  <div class="rp-page">
+    <div class="rp-card">
+      <h2 id="rp-name"></h2>
+      <div class="info" id="rp-info"></div>
+      <div class="sub">You are registered with multiple roles. Select one to continue.</div>
+      <div class="rp-btns" id="rp-btns"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DASHBOARD PAGE ===================== -->
+<div class="page" id="pg-dash">
+  <div class="page-wrap" id="dash-wrap"></div>
+</div>
+
+<!-- ===================== ADMIN PAGE ===================== -->
+<div class="page" id="pg-admin">
+  <div class="page-wrap" id="admin-wrap"></div>
+</div>
+
+<!-- ===================== LOGIN / SIGNUP INLINE PANEL ===================== -->
+<div class="panel-overlay" id="auth-panel">
+  <div class="panel-box">
+    <div class="panel-strip">
+      <button class="panel-close" onclick="closePanel()">✕</button>
+      <h2 id="panel-title">Welcome Back</h2>
+      <p id="panel-sub">Sign in to your TeamSync account</p>
+    </div>
+    <div class="panel-tabs">
+      <button class="ptab active" id="tab-login"  onclick="switchTab('login')">Login</button>
+      <button class="ptab"        id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div class="panel-body">
+      <!-- LOGIN FORM -->
+      <div class="panel-form active" id="form-login">
+        <div class="login-note" id="login-note"></div>
+        <div class="fr">
+          <label>Username</label>
+          <input type="text" id="l-name" placeholder="Enter your name" autocomplete="username" />
+        </div>
+        <div class="fr">
+          <label>Password</label>
+          <input type="password" id="l-pass" placeholder="Enter password" autocomplete="current-password" />
+        </div>
+        <div class="err" id="l-err">Incorrect username or password.</div>
+        <div class="ma">
+          <button class="btn b-gray" onclick="closePanel()">Cancel</button>
+          <button class="btn b-blue" onclick="doLogin()" style="padding:8px 24px;font-size:13px">Login →</button>
+        </div>
+        <div style="margin-top:16px;text-align:center;font-size:13px;color:var(--muted)">
+          Don't have an account? <a href="#" onclick="switchTab('signup');return false" style="color:var(--blue);font-weight:700">Sign Up</a>
+        </div>
+        <div style="margin-top:14px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-size:11.5px;color:var(--muted);line-height:1.7">
+          <strong style="color:var(--text)">Sample logins:</strong><br>
+          Aravind / aravind123 &nbsp;·&nbsp; Mohith / mohith123 &nbsp;·&nbsp; Chandana / chandana123
+        </div>
+      </div>
+      <!-- SIGNUP FORM -->
+      <div class="panel-form" id="form-signup">
+        <div class="fr">
+          <label>Full Name</label>
+          <input type="text" id="s-name" placeholder="Your full name" />
+        </div>
+        <div class="fr-row">
+          <div class="fr">
+            <label>Group</label>
+            <select id="s-group"><option>Team1</option><option>Team2</option><option>Team3</option><option>Team4</option></select>
+          </div>
+          <div class="fr">
+            <label>Role</label>
+            <select id="s-role"><option>Director</option><option>Project Manager</option><option>Team Leader</option><option>Team Member</option><option>User</option></select>
+          </div>
+        </div>
+        <div class="fr">
+          <label>Password</label>
+          <input type="password" id="s-pass" placeholder="Set a password" autocomplete="new-password" />
+        </div>
+        <div class="err" id="s-err"></div>
+        <div class="ma">
+          <button class="btn b-gray" onclick="closePanel()">Cancel</button>
+          <button class="btn b-blue" onclick="doSignup()" style="padding:8px 24px;font-size:13px">Create Account →</button>
+        </div>
+        <div style="margin-top:16px;text-align:center;font-size:13px;color:var(--muted)">
+          Already have an account? <a href="#" onclick="switchTab('login');return false" style="color:var(--blue);font-weight:700">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADD/EDIT EMPLOYEE MODAL ===================== -->
+<div class="modal-bg" id="m-emp">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="em-title">Employee</div>
+      <button class="modal-close" onclick="closeM()">✕</button>
+    </div>
+    <div class="fr"><label>Name</label><input type="text" id="m-name" /></div>
+    <div class="fr"><label>Group</label>
+      <select id="m-group"><option>Team1</option><option>Team2</option><option>Team3</option><option>Team4</option></select>
+    </div>
+    <div class="fr"><label>Role</label>
+      <select id="m-role"><option>Director</option><option>Project Manager</option><option>Team Leader</option><option>Team Member</option><option>User</option></select>
+    </div>
+    <div class="fr"><label>Password</label><input type="text" id="m-pass" placeholder="Leave blank to keep current" /></div>
+    <div class="ma">
+      <button class="btn b-gray" onclick="closeM()">Cancel</button>
+      <button class="btn b-blue" onclick="saveEmp()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DELETE MODAL ===================== -->
+<div class="modal-bg" id="m-del">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Confirm Delete</div>
+      <button class="modal-close" onclick="closeM()">✕</button>
+    </div>
+    <p style="font-size:14px;margin:8px 0 18px;color:var(--muted)">This will permanently remove <strong id="del-name"></strong> from the database.</p>
+    <div class="ma">
+      <button class="btn b-gray" onclick="closeM()">Cancel</button>
+      <button class="btn b-red"  onclick="confirmDel()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN APPROVAL MODAL ===================== -->
+<div class="modal-bg" id="m-admin">
+  <div class="modal" style="width:500px;max-width:96vw">
+    <div class="modal-head">
+      <div class="modal-title">Admin Login</div>
+      <button class="modal-close" onclick="closeAdminPanel()">x</button>
+    </div>
+
+    <div id="admin-login-pane">
+      <div class="fr"><label>Admin Username</label><input type="text" id="a-name" placeholder="admin" /></div>
+      <div class="fr"><label>Admin Password</label><input type="password" id="a-pass" placeholder="Enter admin password" /></div>
+      <div class="err" id="a-err">Invalid admin credentials.</div>
+      <div class="ma">
+        <button class="btn b-gray" onclick="closeAdminPanel()">Cancel</button>
+        <button class="btn b-blue" onclick="adminLogin()">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATABASE =====================
+const DB = {
+  get()  { return JSON.parse(localStorage.getItem('ts_db') || '[]'); },
+  save(l){ localStorage.setItem('ts_db', JSON.stringify(l)); },
+  seed() {
+    if (localStorage.getItem('ts_seeded')) return;
+    this.save([
+      { id:1,  name:'Aravind',  group:'Team1', roles:['Project Manager','Director'], pass:'aravind123' },
+      { id:2,  name:'Mohith',   group:'Team2', roles:['Team Member'],                pass:'mohith123'  },
+      { id:3,  name:'Chandana', group:'Team1', roles:['Team Leader'],                pass:'chandana123'},
+      { id:4,  name:'Divya',    group:'Team1', roles:['Team Member'],                pass:'divya123'   },
+      { id:5,  name:'Elan',     group:'Team3', roles:['Team Leader'],                pass:'elan123'    },
+      { id:6,  name:'Farhan',   group:'Team4', roles:['Team Member'],                pass:'farhan123'  },
+      { id:7,  name:'Bhanu',    group:'Team2', roles:['Project Manager'],            pass:'bhanu123'   },
+      { id:8,  name:'Priya',    group:'Team3', roles:['Team Member'],                pass:'priya123'   },
+      { id:9,  name:'Kiran',    group:'Team4', roles:['Team Leader'],                pass:'kiran123'   },
+      { id:10, name:'Sneha',    group:'Team2', roles:['Team Member'],                pass:'sneha123'   },
+    ]);
+    localStorage.setItem('ts_seeded','1');
+  },
+  find(n,p){ return this.get().find(e=>e.name.toLowerCase()===n.toLowerCase()&&e.pass===p); },
+  nameExists(n){ return this.get().some(e=>e.name.toLowerCase()===n.toLowerCase()); },
+  add(e){
+    const l=this.get();
+    if (typeof e.id !== 'number') e.id=l.length?Math.max(...l.map(x=>x.id))+1:1;
+    l.push(e);
+    this.save(l);
+    return e;
+  },
+  update(id,c){ this.save(this.get().map(e=>e.id===id?{...e,...c}:e)); },
+  remove(id){ this.save(this.get().filter(e=>e.id!==id)); }
+};
+DB.seed();
+
+// ===================== ADMIN STORE =====================
+const ADMIN = {
+  user: 'admin',
+  pass: 'admin123',
+  reqKey: 'ts_role_requests',
+  getReqs() { return JSON.parse(localStorage.getItem(this.reqKey) || '[]'); },
+  saveReqs(list) { localStorage.setItem(this.reqKey, JSON.stringify(list)); },
+  addReq(req) {
+    const list = this.getReqs();
+    req.id = list.length ? Math.max(...list.map(x => x.id)) + 1 : 1;
+    list.push(req);
+    this.saveReqs(list);
+  },
+  updateReq(id, patch) {
+    this.saveReqs(this.getReqs().map(r => r.id === id ? { ...r, ...patch } : r));
+  }
+};
+
+// ===================== STATE =====================
+let CU=null, CR=null, editId=null, delId=null, activeSection='dashboard';
+let pendingSearchRole = null;
+let isAdminLoggedIn = false;
+let adminSection = 'approvals';
+
+// ===================== HELPERS =====================
+const ini = n=>n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+const AVS = ['#0e1c36','#1a56db','#7c3aed','#16a34a','#dc2626','#d97706','#0891b2','#4f46e5'];
+const avc = n=>{ let h=0; for(let c of n) h+=c.charCodeAt(0); return AVS[h%AVS.length]; };
+const ROLE_RANK = { 'User': 0, 'Team Member': 1, 'Team Leader': 2, 'Project Manager': 3, 'Director': 4 };
+const ROLE_ORDER = ['Director','Project Manager','Team Leader','Team Member','User'];
+const tc  = r=>r==='Director'?'t-dir':r==='Project Manager'?'t-pm':r==='Team Leader'?'t-tl':'t-mem';
+const sortRoles = roles => [...roles].sort((a,b)=>(ROLE_RANK[b]??-1)-(ROLE_RANK[a]??-1));
+const th  = roles=>sortRoles(roles).map(r=>`<span class="tag ${tc(r)}">${r}</span>`).join('');
+const esc = s => String(s).replace(/'/g, "\\'");
+const API_BASE = '';
+
+function canEditTargetRoles(actorRole, targetRoles){
+  if (isAdminLoggedIn) return true;
+  if (actorRole === 'Director') return true;
+  if (actorRole === 'Project Manager') return targetRoles.every(r => r === 'Team Leader' || r === 'Team Member');
+  if (actorRole === 'Team Leader') return targetRoles.every(r => r === 'Team Member');
+  return false;
+}
+
+function canAssignRole(actorRole, role){
+  if (isAdminLoggedIn) return ROLE_ORDER.includes(role);
+  if (actorRole === 'Director') return ROLE_ORDER.includes(role);
+  if (actorRole === 'Project Manager') return role === 'Team Leader' || role === 'Team Member';
+  if (actorRole === 'Team Leader') return role === 'Team Member';
+  return false;
+}
+
+function getAssignableRoles(){
+  if (isAdminLoggedIn || CR === 'Director') return ['Director','Project Manager','Team Leader','Team Member','User'];
+  if (CR === 'Project Manager') return ['Team Leader','Team Member'];
+  if (CR === 'Team Leader') return ['Team Member'];
+  return [];
+}
+
+function showPg(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('on')); document.getElementById(id).classList.add('on'); }
+function currentPageId(){ const p = document.querySelector('.page.on'); return p ? p.id : ''; }
+function showPublicSection(section){
+  showPg('pg-public');
+  if (section === 'about') {
+    const about = document.getElementById('about-cdac');
+    if (about) about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (section === 'employee-roles') {
+    const roles = document.getElementById('about-employee-roles');
+    if (roles) roles.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function normalizeRole(raw){
+  const v = String(raw || '').trim().toLowerCase();
+  if (v === 'user') return 'User';
+  if (v === 'manager' || v === 'project manager') return 'Project Manager';
+  if (v === 'director') return 'Director';
+  if (v === 'team leader' || v === 'tema leader') return 'Team Leader';
+  if (v === 'team member') return 'Team Member';
+  return '';
+}
+
+function showLoginNote(msg){
+  const el = document.getElementById('login-note');
+  if (!el) return;
+  if (!msg) { el.style.display = 'none'; el.textContent = ''; return; }
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function buildNavTools(){
+  document.getElementById('nav-tools').innerHTML = `
+    <div class="search-row">
+      <select class="role-search" id="nav-role-search">
+        <option>Director</option>
+        <option>Project Manager</option>
+        <option>Team Leader</option>
+        <option>Team Member</option>
+        <option>User</option>
+      </select>
+      <button class="search-btn" onclick="runRoleSearch()">Search</button>
+    </div>
+    <button class="admin-btn" onclick="openAdminPanel()">Admin Login</button>
+  `;
+}
+
+function goAdminPage(section){
+  if (!isAdminLoggedIn) { openAdminPanel(); return; }
+  adminSection = section || adminSection;
+  showPg('pg-admin');
+  renderAdminPage();
+}
+
+function submitRoleRequest(role){
+  const reqs = ADMIN.getReqs();
+  const pending = reqs.find(r => (r.type || 'access') === 'access' && r.userId === CU.id && r.role === role && r.status === 'Pending');
+  if (pending) {
+    alert('Your request for ' + role + ' is already pending admin approval.');
+    return;
+  }
+  ADMIN.addReq({
+    type: 'access',
+    userId: CU.id,
+    userName: CU.name,
+    role,
+    status: 'Pending',
+    createdAt: new Date().toISOString()
+  });
+  alert('Request sent to admin for ' + role + ' approval.');
+}
+
+function submitRoleChangeRequest(target, newRole){
+  const reqs = ADMIN.getReqs();
+  const pending = reqs.find(r =>
+    (r.type || 'access') === 'role_change' &&
+    r.targetUserId === target.id &&
+    r.newRole === newRole &&
+    r.requestedById === CU.id &&
+    r.status === 'Pending'
+  );
+  if (pending) {
+    alert('A role-change request is already pending for this person.');
+    return false;
+  }
+  ADMIN.addReq({
+    type: 'role_change',
+    requestedById: CU.id,
+    requestedByName: CU.name,
+    requestedByRole: CR,
+    targetUserId: target.id,
+    targetUserName: target.name,
+    oldRoles: [...target.roles],
+    newRole,
+    status: 'Pending',
+    createdAt: new Date().toISOString()
+  });
+  alert('Role change request sent to admin for approval.');
+  return true;
+}
+
+function runRoleSearch(){
+  const selected = document.getElementById('nav-role-search').value;
+  const role = normalizeRole(selected);
+  if (!role) return;
+  if (role === 'User') {
+    showPublicSection('home');
+    return;
+  }
+  if (!CU) {
+    pendingSearchRole = role;
+    openPanel('login');
+    showLoginNote('Sign in is required to access ' + role + ' pages.');
+    return;
+  }
+  if (CU.roles.includes(role)) {
+    selectRole(role);
+    return;
+  }
+  submitRoleRequest(role);
+}
+
+// ---- Auth panel (Login / Sign Up) ----
+function openPanel(tab){
+  switchTab(tab || 'login');
+  showPg('pg-auth');
+  const p = document.getElementById('auth-panel');
+  p.classList.add('inline-auth','open');
+}
+function closePanel(){
+  const p = document.getElementById('auth-panel');
+  p.classList.remove('open','inline-auth');
+  document.getElementById('l-err').style.display='none';
+  document.getElementById('s-err').style.display='none';
+  showLoginNote('');
+  showPg('pg-public');
+}
+function switchTab(tab){
+  document.getElementById('form-login').classList.toggle('active', tab==='login');
+  document.getElementById('form-signup').classList.toggle('active', tab==='signup');
+  document.getElementById('tab-login').classList.toggle('active',  tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+  document.getElementById('panel-title').textContent = tab==='login' ? 'Welcome Back' : 'Create Account';
+  document.getElementById('panel-sub').textContent   = tab==='login' ? 'Sign in to your TeamSync account' : 'Join your team on TeamSync';
+}
+// Close panel on backdrop click
+document.getElementById('auth-panel').addEventListener('click',e=>{
+  if (!document.getElementById('auth-panel').classList.contains('inline-auth') &&
+      e.target===document.getElementById('auth-panel')) closePanel();
+});
+
+// ---- Utility modals (edit/delete) ----
+function openM(id){ document.getElementById(id).classList.add('open'); }
+function closeM(){ document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open')); }
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m)closeM(); }));
+function setRoleOptionsForEditor(selectedRole){
+  const sel = document.getElementById('m-role');
+  const opts = getAssignableRoles();
+  sel.innerHTML = opts.map(r => `<option value="${r}">${r}</option>`).join('');
+  if (opts.includes(selectedRole)) sel.value = selectedRole;
+  else if (opts.length) sel.value = opts[0];
+}
+
+async function apiCall(path, method='GET', payload=null){
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include'
+  };
+  if (payload) opts.body = JSON.stringify(payload);
+  const res = await fetch(API_BASE + path, opts);
+  const data = await res.json().catch(()=>({}));
+  if (!res.ok) throw new Error(data.msg || `Request failed (${res.status})`);
+  return data;
+}
+
+// ===================== NAV CONFIGS PER ROLE =====================
+const NAV_CONFIG = {
+  // Guest
+  '__guest__': [
+    { label: 'Home', section: 'home' },
+    { label: 'About CDAC', section: 'about' },
+    { label: 'About Employee Roles', section: 'employee-roles' },
+  ],
+  'User': [
+    { label: 'Home', section: 'home' },
+    { label: 'About CDAC', section: 'about' },
+    { label: 'About Employee Roles', section: 'employee-roles' },
+  ],
+  // Team Member
+  'Team Member': [
+    { label: 'Home',       section: 'dashboard' },
+    { label: 'My Profile', section: 'profile'   },
+  ],
+  // Team Leader
+  'Team Leader': [
+    { label: 'Home',       section: 'dashboard' },
+    { label: 'My Profile', section: 'profile'   },
+    { label: 'My Team ▾',  dropdown: [
+        { label: 'Team Overview', section: 'myteam' },
+        { label: 'Team Mapping',  section: 'mapping' },
+      ]
+    },
+  ],
+  // Project Manager
+  'Project Manager': [
+    { label: 'Home',        section: 'dashboard' },
+    { label: 'My Profile',  section: 'profile'   },
+    { label: 'My Team ▾',   dropdown: [
+        { label: 'Team Overview', section: 'myteam'  },
+        { label: 'Team Mapping',  section: 'mapping' },
+      ]
+    },
+    { label: 'Groups',      section: 'groups'    },
+  ],
+  // Director — full nav like CDAC reference
+  'Director': [
+    { label: 'Home',          section: 'dashboard' },
+    { label: 'My Profile',    section: 'profile'   },
+    { label: 'Employees ▾',   dropdown: [
+        { label: 'All Employees', section: 'employees' },
+        { label: 'Team Mapping',  section: 'mapping'    },
+      ]
+    },
+    { label: 'Groups ▾',      dropdown: [
+        { label: 'All Groups',    section: 'groups'  },
+      ]
+    },
+    { label: 'Roles',         section: 'roles'     },
+    { label: 'Reports',       section: 'reports'   },
+  ],
+};
+
+// ===================== BUILD NAVBAR =====================
+function buildNav(){
+  let config = CU ? (NAV_CONFIG[CR] || NAV_CONFIG['__guest__']) : NAV_CONFIG['__guest__'];
+  if (CU && CU.roles.length > 1) {
+    config = [
+      ...config,
+      {
+        label: `Select Role (${CR || 'Choose'})`,
+        dropdown: sortRoles(CU.roles).map(r => ({ label: r, section: `__role__${r}` }))
+      }
+    ];
+  }
+  const menu = document.getElementById('nav-menu');
+  buildNavTools();
+
+  menu.innerHTML = config.map(item => {
+    if (item.dropdown) {
+      return `<div class="nav-item">
+        <button class="nav-link">${item.label}</button>
+        <div class="dropdown">
+          ${item.dropdown.map(d =>
+            `<button onclick="ddClick('${d.section||''}','${d.label}')">${d.label}</button>`
+          ).join('')}
+        </div>
+      </div>`;
+    }
+    return `<div class="nav-item">
+      <button class="nav-link" onclick="navClick('${item.section||''}')">${item.label}</button>
+    </div>`;
+  }).join('');
+
+  // Right side
+  const right = document.getElementById('nav-right');
+  if (CU) {
+    right.innerHTML = `
+      <div class="nav-user-chip">
+        <div class="chip-av" style="background:${avc(CU.name)}">${ini(CU.name)}</div>
+        <div>
+          <div class="chip-name">${CU.name}</div>
+          <div class="chip-role">${CR}</div>
+        </div>
+        <div class="chip-dropdown">
+          <div class="cd-head">
+            <strong>${CU.name}</strong>
+            <span>${CU.group} · ${th([CR])}</span>
+          </div>
+          ${CU.roles.length > 1 ? `<button onclick="switchRole()">🔄 Switch Role</button>` : ''}
+          <button onclick="navClick('profile')">👤 My Profile</button>
+          <button onclick="doLogout()">🚪 Logout</button>
+        </div>
+      </div>`;
+  } else {
+    right.innerHTML = `
+      <button class="nbtn n-outline" onclick="openPanel('login')">Login</button>
+      <button class="nbtn n-gold"    onclick="openPanel('signup')">Sign Up</button>`;
+  }
+
+  document.getElementById('topbar-right').textContent = CU
+    ? `Logged in as ${CU.name} · ${CR}`
+    : 'Welcome, Guest';
+
+  markActiveNav();
+}
+
+function markActiveNav(){
+  document.querySelectorAll('.nav-link').forEach(btn=>{
+    btn.classList.remove('active');
+  });
+}
+
+function navClick(section){
+  if ((!CU || CR==='User') && (section === 'home' || section === 'about' || section === 'employee-roles')) {
+    showPublicSection(section);
+    return;
+  }
+  if (!section) { showPg('pg-public'); return; }
+  activeSection = section;
+  markActiveNav();
+  showPg('pg-dash');
+  renderDash(section);
+}
+
+function ddClick(section, label){
+  if (!section) return;
+  if (section.startsWith('__role__')) {
+    selectRole(section.replace('__role__',''));
+    return;
+  }
+  activeSection = section;
+  showPg('pg-dash');
+  renderDash(section);
+}
+
+function switchRole(){ CR=null; buildNav(); showRolePicker(); }
+
+// ===================== PUBLIC CARDS =====================
+function renderPubCards(){
+  const emps = DB.get();
+  document.getElementById('stat-total').textContent = emps.length;
+  document.getElementById('pub-cards').innerHTML = emps.map(e=>`
+    <div class="team-card">
+      <div class="tc-av" style="background:${avc(e.name)}">${ini(e.name)}</div>
+      <div class="tc-name">${e.name}</div>
+      <div class="tc-group">${e.group}</div>
+      ${th(e.roles)}
+    </div>`).join('');
+}
+
+// ===================== LOGIN =====================
+function doLogin(){
+  const name=document.getElementById('l-name').value.trim();
+  const pass=document.getElementById('l-pass').value.trim();
+  const found=DB.find(name,pass);
+  if(!found){ document.getElementById('l-err').style.display='block'; return; }
+  document.getElementById('l-err').style.display='none';
+  CU=found; closePanel(); buildNav();
+  if (pendingSearchRole) {
+    const requested = pendingSearchRole;
+    pendingSearchRole = null;
+    if (CU.roles.includes(requested)) {
+      selectRole(requested);
+      return;
+    }
+    submitRoleRequest(requested);
+  }
+  if(found.roles.length===1){ selectRole(found.roles[0]); }
+  else { showRolePicker(); }
+}
+
+// ===================== SIGNUP =====================
+async function doSignup(){
+  const name=document.getElementById('s-name').value.trim();
+  const group=document.getElementById('s-group').value;
+  const role=document.getElementById('s-role').value;
+  const pass=document.getElementById('s-pass').value.trim();
+  const err=document.getElementById('s-err');
+  err.style.display='none';
+  if(!name){ err.style.display='block'; err.textContent='Name is required.'; return; }
+  if(!pass){ err.style.display='block'; err.textContent='Password is required.'; return; }
+  if(DB.nameExists(name)){ err.style.display='block'; err.textContent='Name already registered.'; return; }
+  let back;
+  try {
+    back = await apiCall('/api/signup', 'POST', { name, group, role, pass });
+  } catch (e) {
+    err.style.display='block';
+    err.textContent = e.message;
+    return;
+  }
+  CU=DB.add({id: back?.employee?.id, name,group,roles:[role],pass});
+  closePanel(); renderPubCards(); buildNav(); selectRole(role);
+  if (pendingSearchRole && !CU.roles.includes(pendingSearchRole)) {
+    submitRoleRequest(pendingSearchRole);
+    pendingSearchRole = null;
+  }
+}
+
+// ===================== ROLE PICKER =====================
+function showRolePicker(){
+  document.getElementById('rp-name').textContent='Welcome back, '+CU.name+'!';
+  document.getElementById('rp-info').innerHTML=
+    'You have <strong>'+CU.roles.length+'</strong> role(s) assigned in the system: '+th(CU.roles);
+  document.getElementById('rp-btns').innerHTML=sortRoles(CU.roles).map(r=>
+    `<button class="rbtn" onclick="selectRole('${r}')">${r}</button>`
+  ).join('');
+  showPg('pg-roles');
+}
+
+function selectRole(role){
+  CR=role; buildNav();
+  if (role === 'User') { showPublicSection('home'); return; }
+  showPg('pg-dash'); renderDash('dashboard');
+}
+
+// ===================== DASHBOARD RENDERER =====================
+function renderDash(section){
+  const emps=DB.get();
+  const isDir=CR==='Director';
+  const isPM=CR==='Project Manager';
+  const isTL=CR==='Team Leader';
+  const canModify = isDir || isPM || isTL;
+  const myTeam=emps.filter(e=>e.group===CU.group);
+
+  // Build sidebar based on role
+  const sidebarLinks = NAV_CONFIG[CR]||[];
+  let sidebarHTML='';
+  const flatLinks = [
+    {label:'Dashboard', section:'dashboard'},
+    {label:'My Profile', section:'profile'},
+    ...(isTL||isPM?[{label:'My Team',section:'myteam'},{label:'Mapping',section:'mapping'}]:[]),
+    ...(isPM||isDir?[{label:'Groups',section:'groups'}]:[]),
+    ...(isDir?[{label:'All Employees',section:'employees'},{label:'Roles',section:'roles'},{label:'Reports',section:'reports'}]:[]),
+  ];
+  sidebarHTML=flatLinks.map(l=>
+    `<button class="${l.section===section?'active':''}" onclick="navClick('${l.section}')">${l.label}</button>`
+  ).join('');
+
+  let content='';
+  if(section==='dashboard'){
+    content=`
+      <div class="hero-banner">
+        <h1>Welcome, ${CU.name}!</h1>
+        <p>You are logged in as <strong>${CR}</strong> in ${CU.group}.</p>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hval">${emps.length}</div><div class="hlbl">Employees</div></div>
+          <div class="hstat"><div class="hval">${myTeam.length}</div><div class="hlbl">My Team</div></div>
+          <div class="hstat"><div class="hval">${[...new Set(emps.map(e=>e.group))].length}</div><div class="hlbl">Groups</div></div>
+          ${isDir?`<div class="hstat"><div class="hval">${emps.filter(e=>e.roles.includes('Director')).length}</div><div class="hlbl">Directors</div></div>`:''}
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-head"><div class="sec-title">My Team — ${CU.group}</div></div>
+        <div class="team-grid">${myTeam.map(e=>`
+          <div class="team-card">
+            <div class="tc-av" style="background:${avc(e.name)}">${ini(e.name)}</div>
+            <div class="tc-name">${e.name}</div>
+            <div class="tc-group">${e.group}</div>
+            ${th(e.roles)}
+          </div>`).join('')}
+        </div>
+      </div>`;
+  } else if(section==='profile'){
+    content=`<div class="sec">
+      <div class="sec-head"><div class="sec-title">My Profile</div></div>
+      <table><tbody>
+        <tr><td style="color:var(--muted);width:180px">Employee ID</td><td>#${String(CU.id).padStart(3,'0')}</td></tr>
+        <tr><td style="color:var(--muted)">Name</td><td>${CU.name}</td></tr>
+        <tr><td style="color:var(--muted)">Group</td><td>${CU.group}</td></tr>
+        <tr><td style="color:var(--muted)">All Roles</td><td>${th(CU.roles)}</td></tr>
+        <tr><td style="color:var(--muted)">Active Role</td><td>${th([CR])}</td></tr>
+      </tbody></table>
+    </div>`;
+  } else if(section==='myteam'){
+    content=`<div class="sec">
+      <div class="sec-head"><div class="sec-title">My Team — ${CU.group} (${myTeam.length})</div></div>
+      <table><thead><tr><th>#</th><th>Name</th><th>Roles</th><th>Actions</th></tr></thead>
+      <tbody>${myTeam.map(e=>`<tr>
+        <td>#${String(e.id).padStart(3,'0')}</td><td>${e.name}</td><td>${th(e.roles)}</td>
+        <td>${canEditTargetRoles(CR, e.roles) ? `<button class="btn b-blue" onclick="openEdit(${e.id})">Edit Role</button>` : `<span style="font-size:12px;color:var(--muted)">No Access</span>`}</td>
+      </tr>`).join('')}</tbody></table>
+    </div>`;
+  } else if(section==='employees'){
+    content=`<div class="sec">
+      <div class="sec-head">
+        <div class="sec-title">All Employees (${emps.length})</div>
+        ${canModify ? `<button class="btn b-green" onclick="openAdd()">+ Add Employee</button>` : ''}
+      </div>
+      <table><thead><tr><th>#</th><th>Name</th><th>Group</th><th>Roles</th><th>Actions</th></tr></thead>
+      <tbody>${emps.map(e=>`<tr>
+        <td>#${String(e.id).padStart(3,'0')}</td>
+        <td><div style="display:flex;align-items:center;gap:8px">
+          <div class="tc-av" style="width:28px;height:28px;font-size:10px;background:${avc(e.name)}">${ini(e.name)}</div>${e.name}
+        </div></td>
+        <td>${e.group}</td><td>${th(e.roles)}</td>
+        <td>${canEditTargetRoles(CR, e.roles) ? `<div class="action-btns">
+          <button class="btn b-blue" onclick="openEdit(${e.id})">Edit</button>
+          <button class="btn b-red"  onclick="openDel(${e.id})">Delete</button>
+        </div>` : `<span style="font-size:12px;color:var(--muted)">No Access</span>`}</td>
+      </tr>`).join('')}</tbody></table>
+    </div>`;
+  } else if(section==='groups'){
+    const gs=[...new Set(emps.map(e=>e.group))].sort();
+    content=`<div class="sec">
+      <div class="sec-head"><div class="sec-title">Groups</div></div>
+      <table><thead><tr><th>Group</th><th>Members</th><th>Count</th></tr></thead>
+      <tbody>${gs.map(g=>{const ms=emps.filter(e=>e.group===g);
+        return`<tr><td><strong>${g}</strong></td><td>${ms.map(e=>e.name).join(', ')}</td><td>${ms.length}</td></tr>`;
+      }).join('')}</tbody></table>
+    </div>`;
+  } else if(section==='roles'){
+    const rs=['Director','Project Manager','Team Leader','Team Member','User'];
+    content=`<div class="sec">
+      <div class="sec-head"><div class="sec-title">Roles</div></div>
+      <table><thead><tr><th>Role</th><th>Employees</th><th>Count</th></tr></thead>
+      <tbody>${rs.map(r=>{const ms=emps.filter(e=>e.roles.includes(r));
+        return`<tr><td>${th([r])}</td><td>${ms.map(e=>e.name).join(', ')||'—'}</td><td>${ms.length}</td></tr>`;
+      }).join('')}</tbody></table>
+    </div>`;
+  } else if(section==='mapping'){
+    content=`<div class="sec">
+      <div class="sec-head"><div class="sec-title">Employee – Role – Group Mapping</div></div>
+      <table><thead><tr><th>#</th><th>Employee</th><th>Role(s)</th><th>Group</th></tr></thead>
+      <tbody>${emps.map((e,i)=>`<tr><td>${i+1}</td><td>${e.name}</td><td>${th(e.roles)}</td><td>${e.group}</td></tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+  } else if(section==='reports'){
+    const rs=['Director','Project Manager','Team Leader','Team Member','User'];
+    const gs=[...new Set(emps.map(e=>e.group))].sort();
+    content=`
+      <div class="hero-banner" style="margin-bottom:20px">
+        <h1>Reports & Analytics</h1>
+        <p>Overview of all employee data and distribution.</p>
+        <div class="hero-stats">
+          ${rs.map(r=>`<div class="hstat"><div class="hval">${emps.filter(e=>e.roles.includes(r)).length}</div><div class="hlbl">${r}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-head"><div class="sec-title">Group Distribution</div></div>
+        ${gs.map(g=>{const cnt=emps.filter(e=>e.group===g).length; const pct=Math.round(cnt/emps.length*100);
+          return`<div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>${g}</span><span>${cnt} members (${pct}%)</span></div>
+            <div style="background:#f1f5f9;border-radius:4px;height:8px"><div style="background:var(--blue);height:8px;border-radius:4px;width:${pct}%"></div></div>
+          </div>`;}).join('')}
+      </div>`;
+  }
+
+  document.getElementById('dash-wrap').innerHTML = `
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">🔗 Quick Links</div>
+        <div class="sidebar-links">${sidebarHTML}</div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">📅 My Info</div>
+        <div class="batch-info">
+          <div class="batch-row"><span class="label">Name</span><span class="val">${CU.name}</span></div>
+          <div class="batch-row"><span class="label">Group</span><span class="val">${CU.group}</span></div>
+          <div class="batch-row"><span class="label">Role</span><span class="val">${CR}</span></div>
+          <div class="batch-row"><span class="label">ID</span><span class="val">#${String(CU.id).padStart(3,'0')}</span></div>
+          ${CU.roles.length>1?`<button class="view-btn" onclick="switchRole()">Switch Role →</button>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="main-content">${content}</div>
+    <div class="right-panel">
+      <div class="enquiry-card">
+        <div class="eq-head">🔔 Notices</div>
+        <div class="notices">
+          <div class="notice-item"><span class="notice-badge nb-new">NEW</span><span>Team1 has 2 open slots</span></div>
+          <div class="notice-item"><span class="notice-badge nb-info">INFO</span><span>Q3 performance reviews in Aug</span></div>
+          <div class="notice-item"><span class="notice-badge nb-new">NEW</span><span>Leadership training — Sep batch</span></div>
+        </div>
+      </div>
+      ${isDir?`<div class="enquiry-card">
+        <div class="eq-head">📊 Quick Stats</div>
+        <div class="notices">
+          <div class="notice-item"><span class="notice-badge nb-info">${emps.length}</span><span>Total Employees</span></div>
+          <div class="notice-item"><span class="notice-badge nb-new">${[...new Set(emps.map(e=>e.group))].length}</span><span>Active Groups</span></div>
+        </div>
+      </div>`:''}
+    </div>`;
+}
+
+// ===================== ADD / EDIT / DELETE =====================
+function openAdd(){
+  if (!isAdminLoggedIn && !canAssignRole(CR, 'Team Member')) { alert('You do not have permission to add people.'); return; }
+  editId=null;
+  document.getElementById('em-title').textContent='Add New Employee';
+  ['m-name','m-pass'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('m-group').value='Team1';
+  setRoleOptionsForEditor('Team Member');
+  openM('m-emp');
+}
+function openEdit(id){
+  editId=id;
+  const e=DB.get().find(x=>x.id===id);
+  if (!e) return;
+  if (!canEditTargetRoles(CR, e.roles)) { alert('You do not have permission to edit this person.'); return; }
+  document.getElementById('em-title').textContent='Edit: '+e.name;
+  document.getElementById('m-name').value=e.name;
+  document.getElementById('m-group').value=e.group;
+  setRoleOptionsForEditor(e.roles[0]);
+  document.getElementById('m-pass').value='';
+  openM('m-emp');
+}
+async function saveEmp(){
+  const name=document.getElementById('m-name').value.trim(), group=document.getElementById('m-group').value, role=document.getElementById('m-role').value, pass=document.getElementById('m-pass').value.trim();
+  if(!name){alert('Name required.');return;}
+  if(!canAssignRole(CR, role)){ alert('You cannot assign this role.'); return; }
+  if(editId){
+    const target = DB.get().find(x=>x.id===editId);
+    if (!target || !canEditTargetRoles(CR, target.roles)) { alert('You do not have permission to edit this person.'); return; }
+    const roleChanged = target.roles.length !== 1 || target.roles[0] !== role;
+    if (!isAdminLoggedIn && CR !== 'Director' && roleChanged) {
+      const sent = submitRoleChangeRequest(target, role);
+      if (!sent) return;
+      closeM();
+      if (currentPageId() === 'pg-admin') renderAdminPage();
+      else renderDash(activeSection);
+      return;
+    }
+    try {
+      await apiCall(`/api/employees/${editId}`, 'PUT', { name, group, role, pass });
+    } catch (e) {
+      alert(`Backend update failed: ${e.message}`);
+      return;
+    }
+    DB.update(editId,{name,group,roles:[role],...(pass?{pass}:{})});
+    if(CU&&CU.id===editId){CU=DB.get().find(x=>x.id===editId);buildNav();}
+  }
+  else {
+    let back;
+    try {
+      back = await apiCall('/api/employees', 'POST', { name, group, role, pass:pass||name.toLowerCase() });
+    } catch (e) {
+      alert(`Backend add failed: ${e.message}`);
+      return;
+    }
+    DB.add({id: back?.employee?.id, name,group,roles:[role],pass:pass||name.toLowerCase()});
+  }
+  closeM();
+  renderPubCards();
+  if (currentPageId() === 'pg-admin') renderAdminPage();
+  else renderDash(activeSection);
+}
+function openDel(id){
+  const target=DB.get().find(x=>x.id===id);
+  if (!target) return;
+  if (!canEditTargetRoles(CR, target.roles)) { alert('You do not have permission to delete this person.'); return; }
+  delId=id;
+  document.getElementById('del-name').textContent=target.name;
+  openM('m-del');
+}
+async function confirmDel(){
+  const target=DB.get().find(x=>x.id===delId);
+  if (target && !canEditTargetRoles(CR, target.roles)) { alert('You do not have permission to delete this person.'); closeM(); return; }
+  try {
+    await apiCall(`/api/employees/${delId}`, 'DELETE');
+  } catch (e) {
+    alert(`Backend delete failed: ${e.message}`);
+    return;
+  }
+  DB.remove(delId);
+  closeM();
+  renderPubCards();
+  if (currentPageId() === 'pg-admin') renderAdminPage();
+  else renderDash(activeSection);
+}
+function doLogout(){ CU=null;CR=null; buildNav(); renderPubCards(); showPublicSection('home'); }
+
+// ===================== ADMIN FLOW =====================
+function openAdminPanel(){
+  if (isAdminLoggedIn) { goAdminPage('approvals'); return; }
+  showPg('pg-admin-auth');
+  const err = document.getElementById('ai-err');
+  if (err) err.style.display = 'none';
+}
+
+function closeAdminPanel(){
+  showPg('pg-public');
+}
+
+function adminLogin(){
+  const un = document.getElementById('ai-name').value.trim();
+  const pw = document.getElementById('ai-pass').value.trim();
+  if (un !== ADMIN.user || pw !== ADMIN.pass) {
+    document.getElementById('ai-err').style.display = 'block';
+    return;
+  }
+  isAdminLoggedIn = true;
+  document.getElementById('ai-err').style.display = 'none';
+  goAdminPage('approvals');
+}
+
+function adminLogout(){
+  isAdminLoggedIn = false;
+  showPublicSection('home');
+}
+
+function approveReq(id){
+  const req = ADMIN.getReqs().find(r => r.id === id);
+  if (!req) return;
+  const type = req.type || 'access';
+
+  if (type === 'role_change') {
+    const target = DB.get().find(e => e.id === req.targetUserId);
+    if (!target) {
+      ADMIN.updateReq(id, { status:'Rejected', reviewedAt: new Date().toISOString() });
+      renderAdminPage();
+      return;
+    }
+    DB.update(target.id, { roles: [req.newRole] });
+    ADMIN.updateReq(id, { status:'Approved', reviewedAt: new Date().toISOString() });
+    if (CU && CU.id === target.id) {
+      CU = DB.get().find(e => e.id === target.id);
+      if (!CU.roles.includes(CR)) CR = CU.roles[0];
+      buildNav();
+    }
+    renderPubCards();
+    renderAdminPage();
+    return;
+  }
+
+  const usr = DB.get().find(e => e.id === req.userId);
+  if (!usr) {
+    ADMIN.updateReq(id, { status:'Rejected', reviewedAt: new Date().toISOString() });
+    renderAdminPage();
+    return;
+  }
+  if (!usr.roles.includes(req.role)) {
+    DB.update(usr.id, { roles: [...usr.roles, req.role] });
+  }
+  ADMIN.updateReq(id, { status:'Approved', reviewedAt: new Date().toISOString() });
+  if (CU && CU.id === usr.id) {
+    CU = DB.get().find(e => e.id === usr.id);
+    if (!CR) CR = CU.roles[0];
+    buildNav();
+  }
+  renderPubCards();
+  renderAdminPage();
+}
+
+function rejectReq(id){
+  ADMIN.updateReq(id, { status:'Rejected', reviewedAt: new Date().toISOString() });
+  renderAdminPage();
+}
+
+function adminRemoveRole(empId, role){
+  const emp = DB.get().find(e => e.id === empId);
+  if (!emp) return;
+  if (!emp.roles.includes(role)) return;
+  if (!isAdminLoggedIn && !canEditTargetRoles(CR, emp.roles)) { alert('You do not have permission to remove this role.'); return; }
+  if (!confirm(`Remove "${role}" role from ${emp.name}?`)) return;
+  if (emp.roles.length <= 1) {
+    alert('At least one role must remain for each person.');
+    return;
+  }
+  const nextRoles = emp.roles.filter(r => r !== role);
+  DB.update(empId, { roles: nextRoles });
+
+  if (CU && CU.id === empId) {
+    CU = DB.get().find(e => e.id === empId);
+    if (!CU.roles.includes(CR)) CR = CU.roles[0];
+    buildNav();
+  }
+
+  renderPubCards();
+  renderAdminPage();
+  alert(`Role "${role}" removed for ${emp.name}.`);
+}
+
+function renderAdminPage(){
+  const emps = DB.get();
+  const reqs = ADMIN.getReqs().filter(r => r.status === 'Pending');
+
+  const approvalsHTML = `
+    <div class="sec">
+      <div class="sec-head"><div class="sec-title">Pending Approvals (${reqs.length})</div></div>
+      <table>
+        <thead><tr><th>ID</th><th>Request</th><th>Details</th><th>Action</th></tr></thead>
+        <tbody>
+          ${reqs.length ? reqs.map(r => `
+            <tr>
+              <td>#${r.id}</td>
+              <td>${(r.type||'access')==='role_change' ? 'Role Change' : 'Role Access'}</td>
+              <td>${(r.type||'access')==='role_change'
+                ? `<strong>${r.requestedByName}</strong> (${r.requestedByRole}) requested to change <strong>${r.targetUserName}</strong> to ${th([r.newRole])}`
+                : `<strong>${r.userName}</strong> requested ${th([r.role])}`}</td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn b-green" onclick="approveReq(${r.id})">Approve</button>
+                  <button class="btn b-red" onclick="rejectReq(${r.id})">Reject</button>
+                </div>
+              </td>
+            </tr>
+          `).join('') : '<tr><td colspan="4">No pending approvals.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  const teamsHTML = `
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-title">All Teams Data (${emps.length})</div>
+        <button class="btn b-green" onclick="openAdd()">+ Add Person</button>
+      </div>
+      <table>
+        <thead><tr><th>#</th><th>Name</th><th>Group</th><th>Roles</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${emps.map(e => `
+            <tr>
+              <td>#${String(e.id).padStart(3,'0')}</td>
+              <td>${e.name}</td>
+              <td>${e.group}</td>
+              <td>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  ${e.roles.map(r => `
+                    <span style="display:inline-flex;align-items:center;gap:4px">
+                      <span class="tag ${tc(r)}">${r}</span>
+                      <button class="btn b-gray" style="padding:2px 6px;font-size:10px" onclick="adminRemoveRole(${e.id},'${esc(r)}')">Remove</button>
+                    </span>
+                  `).join('')}
+                </div>
+              </td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn b-blue" onclick="openEdit(${e.id})">Edit</button>
+                  <button class="btn b-red" onclick="openDel(${e.id})">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('admin-wrap').innerHTML = `
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-head">Admin Menu</div>
+        <div class="sidebar-links">
+          <button class="${adminSection==='approvals'?'active':''}" onclick="goAdminPage('approvals')">Approvals</button>
+          <button class="${adminSection==='teams'?'active':''}" onclick="goAdminPage('teams')">All Teams Data</button>
+          <button onclick="adminLogout()">Logout Admin</button>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="hero-banner">
+        <h1>Admin Console</h1>
+        <p>Review approvals and maintain all team data.</p>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hval">${reqs.length}</div><div class="hlbl">Pending</div></div>
+          <div class="hstat"><div class="hval">${emps.length}</div><div class="hlbl">Employees</div></div>
+          <div class="hstat"><div class="hval">${[...new Set(emps.map(e=>e.group))].length}</div><div class="hlbl">Teams</div></div>
+        </div>
+      </div>
+      ${adminSection === 'approvals' ? approvalsHTML : teamsHTML}
+    </div>
+    <div class="right-panel">
+      <div class="enquiry-card">
+        <div class="eq-head">Admin Summary</div>
+        <div class="notices">
+          <div class="notice-item"><span class="notice-badge nb-new">${reqs.length}</span><span>Pending Approvals</span></div>
+          <div class="notice-item"><span class="notice-badge nb-info">${emps.length}</span><span>Total Employees</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') { closePanel(); closeM(); }
+  if(e.key==='Enter' && document.getElementById('auth-panel').classList.contains('open')){
+    if(document.getElementById('form-login').classList.contains('active')) doLogin();
+    else doSignup();
+  }
+});
+
+// ===================== INIT =====================
+document.getElementById('auth-host').appendChild(document.getElementById('auth-panel'));
+renderPubCards(); buildNav(); showPublicSection('home');
+</script>
+</body>
+</html>
+
+
